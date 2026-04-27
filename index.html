@@ -142,6 +142,33 @@
     }
     .diag-card p { margin: 8px 0; font-size: .93rem; }
 
+      .feature-actions {
+        display:grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+        margin-top: 12px;
+      }
+      .feature-btn {
+        display:block;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: linear-gradient(130deg, rgba(17,31,56,.92), rgba(14,23,42,.95));
+        padding: 14px;
+        text-decoration:none;
+        color: var(--text);
+      }
+      .feature-btn strong {
+        display:block;
+        margin-bottom: 5px;
+        font-size: 1rem;
+      }
+      .feature-btn small {
+        color: var(--muted);
+        font-size: .9rem;
+      }
+      .feature-btn.arch { border-color: #295074; }
+      .feature-btn.runtime { border-color: #305946; }
+
     .repo-grid {
       display:grid;
       gap:12px;
