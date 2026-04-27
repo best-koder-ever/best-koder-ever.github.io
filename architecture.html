@@ -5,46 +5,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Architecture Diagram | best-koder-ever</title>
   <style>
-    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --line:#1f2937; }
-    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: var(--bg); color:var(--text); }
-    .wrap { max-width: 1280px; margin: 0 auto; padding: 30px 20px 64px; }
-    .panel { background: rgba(17,24,39,.92); border:1px solid var(--line); border-radius:14px; padding:16px; overflow:auto; }
-    p { color: var(--muted); }
-    a { color:#86efac; text-decoration:none; }
-    a:hover { text-decoration:underline; }
+    :root {
+      --bg:#0b1220;
+      --panel:#0f172a;
+      --panel-2:#111c33;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --line:#273249;
+      --accent:#22c55e;
+      --accent-2:#38bdf8;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1100px 500px at 10% -10%, #1e293b 0%, var(--bg) 58%);
+      color: var(--text);
+    }
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 30px 20px 56px; }
+    .hero {
+      background: linear-gradient(130deg, rgba(17,28,51,.95), rgba(15,23,42,.95));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0 0 8px; font-size: 1.9rem; }
+    p { margin: 0; color: var(--muted); line-height: 1.55; }
+    .links { margin-top: 12px; }
+    .links a { color: var(--accent); text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
+    .meta {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 16px;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(17,24,39,.7);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #cbd5e1;
+      font-size: .92rem;
+    }
+    .chip strong { color: var(--accent-2); }
+    .panel {
+      background: linear-gradient(180deg, rgba(17,24,39,.94), rgba(14,22,38,.96));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      overflow: auto;
+    }
+    .title-row {
+      display:flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .title-row h2 { margin: 0; font-size: 1.1rem; }
+    .title-row span { color: var(--muted); font-size: .9rem; }
+    .mermaid { min-width: 1080px; }
+    @media (max-width: 900px) {
+      .mermaid { min-width: 900px; }
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>Advanced Architecture Diagram</h1>
-    <p>High-detail platform map including clients, gateway, identity providers, core services, persistence, and external AI/media providers.</p>
-    <p><a href="/">Back to main page</a> | <a href="/runtime-flow.html">Open runtime sequence diagram</a></p>
+    <section class="hero">
+      <h1>Advanced Architecture Diagram</h1>
+      <p>Cleaner layered view of the full DatingApp system, including gateway, identity providers, microservices, storage, and external AI providers.</p>
+      <p class="links"><a href="/">Back to main page</a> | <a href="/runtime-flow.html">Open runtime sequence diagram</a></p>
+    </section>
 
-    <div class="panel">
+    <section class="meta">
+      <div class="chip"><strong>Layer 1:</strong> Flutter Web + Mobile clients</div>
+      <div class="chip"><strong>Layer 2:</strong> YARP gateway + Keycloak + Firebase</div>
+      <div class="chip"><strong>Layer 3:</strong> Domain, safety, and automation services</div>
+      <div class="chip"><strong>Layer 4:</strong> Service data stores + external LLM providers</div>
+    </section>
+
+    <section class="panel">
+      <div class="title-row">
+        <h2>System Topology</h2>
+        <span>Reorganized to reduce edge crossing and improve readability</span>
+      </div>
       <pre class="mermaid">
-flowchart LR
-    subgraph Client[Client Layer]
+flowchart TB
+    subgraph Client[Client Apps]
       FW[Flutter Web]
       FM[Flutter Mobile]
     end
 
-    subgraph Edge[Edge and Identity]
+    subgraph Access[Access and Identity]
       Y[YARP Gateway]
       KC[Keycloak OIDC]
-      FB[Firebase Auth and SMS]
+      FB[Firebase SMS and Push]
     end
 
-    subgraph Core[Core Services]
+    subgraph Domain[Domain Services]
       US[UserService]
       MMS[MatchmakingService]
       SWS[swipe-service]
       MSG[messaging-service]
       PHS[photo-service]
+    end
+
+    subgraph Ops[Safety and Automation]
       SAF[safety-service]
       BOT[bot-service]
     end
 
-    subgraph Data[Persistence]
+    subgraph Data[Data Stores]
       UDB[(User DB)]
       MDB[(Matchmaking DB)]
       SWDB[(Swipe DB)]
@@ -54,19 +128,15 @@ flowchart LR
       FS[(Photo Storage)]
     end
 
-    subgraph External[External AI and Media]
-      LLM1[Groq API]
-      LLM2[Gemini API]
-      LLM3[Ollama Local]
-      PUSH[FCM Push]
+    subgraph External[External AI Providers]
+      LLM1[Groq]
+      LLM2[Gemini]
+      LLM3[Ollama]
     end
 
     FW --> Y
     FM --> Y
     FM --> FB
-
-    FW --> KC
-    FM --> KC
     Y --> KC
 
     Y --> US
@@ -74,8 +144,10 @@ flowchart LR
     Y --> SWS
     Y --> MSG
     Y --> PHS
-    Y --> SAF
-    Y --> BOT
+
+    MSG --> SAF
+    BOT --> US
+    BOT --> MSG
 
     US --> UDB
     MMS --> MDB
@@ -85,21 +157,37 @@ flowchart LR
     BOT --> BDB
     PHS --> FS
 
-    MSG --> SAF
     SAF --> LLM1
     SAF --> LLM2
     SAF --> LLM3
-    MSG --> PUSH
-    US --> FB
-    BOT --> US
-    BOT --> MSG
+    MSG --> FB
       </pre>
-    </div>
+    </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: 'loose',
+      theme: 'base',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis',
+        nodeSpacing: 42,
+        rankSpacing: 68
+      },
+      themeVariables: {
+        background: '#0f172a',
+        primaryColor: '#1f2937',
+        primaryTextColor: '#e5e7eb',
+        lineColor: '#94a3b8',
+        tertiaryColor: '#111827',
+        clusterBkg: '#0b1326',
+        clusterBorder: '#334155'
+      }
+    });
   </script>
 </body>
 </html>
