@@ -5,19 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>best-koder-ever | Portfolio</title>
   <style>
-    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; --line:#1f2937; }
     * { box-sizing:border-box; }
-    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: radial-gradient(1200px 600px at 20% 0%, #1f2937 0%, var(--bg) 60%); color:var(--text); }
-    .wrap { max-width: 1060px; margin: 0 auto; padding: 40px 20px 64px; }
+    body {
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 600px at 20% 0%, #1f2937 0%, var(--bg) 60%);
+      color:var(--text);
+    }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 40px 20px 64px; }
     h1 { font-size: 2rem; margin: 0 0 8px; }
-    h2 { margin-top: 0; }
+    h2 { margin-top: 0; margin-bottom: 12px; }
     p { color: var(--muted); line-height: 1.6; }
-    ul { color: var(--muted); line-height: 1.7; padding-left: 20px; }
+    ul { color: var(--muted); line-height: 1.7; padding-left: 20px; margin: 10px 0 0; }
     .grid { display:grid; gap:14px; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); margin-top:22px; }
-    .card { background: rgba(17,24,39,.8); border:1px solid #1f2937; border-radius:14px; padding:16px; min-height:140px; }
+    .card { background: rgba(17,24,39,.85); border:1px solid var(--line); border-radius:14px; padding:16px; min-height:140px; }
+    .diagram-card { background: rgba(17,24,39,.92); border:1px solid var(--line); border-radius:14px; padding:16px; margin-top:14px; overflow:auto; }
+    .diagram-title { margin: 0 0 8px; font-size: 1rem; color: #d1d5db; }
     a { color:#86efac; text-decoration:none; }
     a:hover { text-decoration:underline; }
-    .section { margin-top: 26px; }
+    .section { margin-top: 28px; }
     .badge { display:inline-block; margin-top: 10px; color:#052e16; background:#86efac; padding:6px 10px; border-radius:999px; font-weight:600; }
     .small { font-size: .95rem; }
   </style>
@@ -25,17 +32,134 @@
 <body>
   <main class="wrap">
     <h1>Martin Chagallo | Repo overview</h1>
-    <p>DatingApp is a full-stack, AI-assisted engineering project built as a distributed dating platform across multiple repositories. It combines .NET 8 microservices, real-time SignalR messaging, Keycloak-based authentication, and a Flutter mobile/web client to demonstrate production-style system design and delivery.</p>
+    <p>DatingApp is a full-stack, AI-assisted engineering project built as a distributed dating platform across multiple repositories. It combines .NET 8 microservices, real-time SignalR messaging, Keycloak-based authentication, Firebase phone and SMS verification, external LLM moderation paths, and a Flutter mobile/web client to demonstrate production-style system design and delivery.</p>
     <span class="badge">Single navigation page for all repositories</span>
 
     <section class="section">
       <h2>System Overview</h2>
       <ul>
-        <li><strong>Architecture:</strong> Microservice platform with dedicated services for user profiles, matchmaking, swipes, messaging, photos, safety, and orchestration through a gateway.</li>
-        <li><strong>Real-Time + Domain Logic:</strong> SignalR messaging, swipe-to-match workflows, and candidate scoring to show event-driven and domain-heavy backend design.</li>
-        <li><strong>AI and Safety:</strong> Moderation and safety pipeline patterns integrated with messaging and media flows.</li>
-        <li><strong>Client + Delivery:</strong> Flutter app for mobile/web, multi-repo workflow, and testable service boundaries with CI-ready structure.</li>
+        <li><strong>Architecture:</strong> Microservice platform with dedicated services for user profiles, matchmaking, swipes, messaging, photos, safety, and bot orchestration behind YARP.</li>
+        <li><strong>Identity and Verification:</strong> Keycloak OIDC handles session identity while Firebase supports phone auth, OTP/SMS flows, and push notification channels.</li>
+        <li><strong>AI and Safety:</strong> Messaging moderation and safety policies call external LLM providers (Groq, Gemini, Ollama fallback) via safety-service patterns.</li>
+        <li><strong>Client and Runtime:</strong> Flutter app targets web and mobile with real-time SignalR updates, plus event-driven calls across services and per-service persistence stores.</li>
       </ul>
+
+      <div class="diagram-card">
+        <p class="diagram-title">Architecture: clients, gateway, identity, services, persistence, and external providers</p>
+        <pre class="mermaid">
+flowchart LR
+    subgraph Client[Client Layer]
+      FW[Flutter Web]
+      FM[Flutter Mobile]
+    end
+
+    subgraph Edge[Edge and Identity]
+      Y[YARP Gateway]
+      KC[Keycloak OIDC]
+      FB[Firebase Auth and SMS]
+    end
+
+    subgraph Core[Core Services]
+      US[UserService]
+      MMS[MatchmakingService]
+      SWS[swipe-service]
+      MSG[messaging-service]
+      PHS[photo-service]
+      SAF[safety-service]
+      BOT[bot-service]
+    end
+
+    subgraph Data[Persistence]
+      UDB[(User DB)]
+      MDB[(Matchmaking DB)]
+      SWDB[(Swipe DB)]
+      MSGDB[(Messaging DB)]
+      PDB[(Photo DB)]
+      BDB[(Bot SQLite)]
+      FS[(Photo Storage)]
+    end
+
+    subgraph External[External AI and Media]
+      LLM1[Groq API]
+      LLM2[Gemini API]
+      LLM3[Ollama Local]
+      PUSH[FCM Push]
+    end
+
+    FW --> Y
+    FM --> Y
+    FM --> FB
+
+    FW --> KC
+    FM --> KC
+    Y --> KC
+
+    Y --> US
+    Y --> MMS
+    Y --> SWS
+    Y --> MSG
+    Y --> PHS
+    Y --> SAF
+    Y --> BOT
+
+    US --> UDB
+    MMS --> MDB
+    SWS --> SWDB
+    MSG --> MSGDB
+    PHS --> PDB
+    BOT --> BDB
+    PHS --> FS
+
+    MSG --> SAF
+    SAF --> LLM1
+    SAF --> LLM2
+    SAF --> LLM3
+    MSG --> PUSH
+    US --> FB
+    BOT --> US
+    BOT --> MSG
+        </pre>
+      </div>
+
+      <div class="diagram-card">
+        <p class="diagram-title">Runtime flow: login, swipe, match creation, moderation, and realtime delivery</p>
+        <pre class="mermaid">
+sequenceDiagram
+    participant App as Flutter App
+    participant Y as YARP Gateway
+    participant SW as swipe-service
+    participant MM as MatchmakingService
+    participant MSG as messaging-service
+    participant SAF as safety-service
+    participant LLM as External LLM
+    participant KC as Keycloak
+    participant FCM as Firebase/FCM
+
+    App->>KC: OIDC login (PKCE)
+    KC-->>App: Access and refresh tokens
+
+    App->>Y: POST /api/swipes (Bearer token)
+    Y->>SW: Forward swipe request
+    SW->>MM: Evaluate candidate and match rules
+    MM-->>SW: Match result (yes/no)
+    SW-->>Y: Swipe processing result
+    Y-->>App: Swipe API response
+
+    alt Match created
+      MM->>MSG: Create conversation bootstrap
+      MSG->>FCM: Push notification trigger
+      FCM-->>App: New match notification
+    end
+
+    App->>Y: Send chat message
+    Y->>MSG: Forward message
+    MSG->>SAF: Moderate content
+    SAF->>LLM: Classification request
+    LLM-->>SAF: Safety verdict
+    SAF-->>MSG: Allow/flag result
+    MSG-->>App: SignalR realtime update
+        </pre>
+      </div>
     </section>
 
     <section class="section">
@@ -54,12 +178,15 @@
     </section>
 
     <section class="section">
-
-    <section class="section">
       <h2>Profile Links</h2>
       <p><a href="https://github.com/best-koder-org">Organization</a> | <a href="https://github.com/best-koder-ever">Personal</a></p>
       <p class="small">Add YouTube demos, LinkedIn, and CV links here as final polish.</p>
     </section>
   </main>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+  </script>
 </body>
 </html>
