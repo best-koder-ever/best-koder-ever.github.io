@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Runtime Flow Diagram | best-koder-ever</title>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --line:#1f2937; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: var(--bg); color:var(--text); }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 30px 20px 64px; }
+    .panel { background: rgba(17,24,39,.92); border:1px solid var(--line); border-radius:14px; padding:16px; overflow:auto; }
+    p { color: var(--muted); }
+    a { color:#86efac; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Runtime Sequence Diagram</h1>
+    <p>Detailed request flow from login through swipe processing, match creation, moderation, and realtime message delivery.</p>
+    <p><a href="/">Back to main page</a> | <a href="/architecture.html">Open architecture diagram</a></p>
+
+    <div class="panel">
+      <pre class="mermaid">
+sequenceDiagram
+    participant App as Flutter App
+    participant Y as YARP Gateway
+    participant SW as swipe-service
+    participant MM as MatchmakingService
+    participant MSG as messaging-service
+    participant SAF as safety-service
+    participant LLM as External LLM
+    participant KC as Keycloak
+    participant FCM as Firebase/FCM
+
+    App->>KC: OIDC login (PKCE)
+    KC-->>App: Access and refresh tokens
+
+    App->>Y: POST /api/swipes (Bearer token)
+    Y->>SW: Forward swipe request
+    SW->>MM: Evaluate candidate and match rules
+    MM-->>SW: Match result (yes/no)
+    SW-->>Y: Swipe processing result
+    Y-->>App: Swipe API response
+
+    alt Match created
+      MM->>MSG: Create conversation bootstrap
+      MSG->>FCM: Push notification trigger
+      FCM-->>App: New match notification
+    end
+
+    App->>Y: Send chat message
+    Y->>MSG: Forward message
+    MSG->>SAF: Moderate content
+    SAF->>LLM: Classification request
+    LLM-->>SAF: Safety verdict
+    SAF-->>MSG: Allow/flag result
+    MSG-->>App: SignalR realtime update
+      </pre>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+  </script>
+</body>
+</html>

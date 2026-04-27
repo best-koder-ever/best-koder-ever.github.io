@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Architecture Diagram | best-koder-ever</title>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --line:#1f2937; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: var(--bg); color:var(--text); }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 30px 20px 64px; }
+    .panel { background: rgba(17,24,39,.92); border:1px solid var(--line); border-radius:14px; padding:16px; overflow:auto; }
+    p { color: var(--muted); }
+    a { color:#86efac; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Advanced Architecture Diagram</h1>
+    <p>High-detail platform map including clients, gateway, identity providers, core services, persistence, and external AI/media providers.</p>
+    <p><a href="/">Back to main page</a> | <a href="/runtime-flow.html">Open runtime sequence diagram</a></p>
+
+    <div class="panel">
+      <pre class="mermaid">
+flowchart LR
+    subgraph Client[Client Layer]
+      FW[Flutter Web]
+      FM[Flutter Mobile]
+    end
+
+    subgraph Edge[Edge and Identity]
+      Y[YARP Gateway]
+      KC[Keycloak OIDC]
+      FB[Firebase Auth and SMS]
+    end
+
+    subgraph Core[Core Services]
+      US[UserService]
+      MMS[MatchmakingService]
+      SWS[swipe-service]
+      MSG[messaging-service]
+      PHS[photo-service]
+      SAF[safety-service]
+      BOT[bot-service]
+    end
+
+    subgraph Data[Persistence]
+      UDB[(User DB)]
+      MDB[(Matchmaking DB)]
+      SWDB[(Swipe DB)]
+      MSGDB[(Messaging DB)]
+      PDB[(Photo DB)]
+      BDB[(Bot SQLite)]
+      FS[(Photo Storage)]
+    end
+
+    subgraph External[External AI and Media]
+      LLM1[Groq API]
+      LLM2[Gemini API]
+      LLM3[Ollama Local]
+      PUSH[FCM Push]
+    end
+
+    FW --> Y
+    FM --> Y
+    FM --> FB
+
+    FW --> KC
+    FM --> KC
+    Y --> KC
+
+    Y --> US
+    Y --> MMS
+    Y --> SWS
+    Y --> MSG
+    Y --> PHS
+    Y --> SAF
+    Y --> BOT
+
+    US --> UDB
+    MMS --> MDB
+    SWS --> SWDB
+    MSG --> MSGDB
+    PHS --> PDB
+    BOT --> BDB
+    PHS --> FS
+
+    MSG --> SAF
+    SAF --> LLM1
+    SAF --> LLM2
+    SAF --> LLM3
+    MSG --> PUSH
+    US --> FB
+    BOT --> US
+    BOT --> MSG
+      </pre>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+  </script>
+</body>
+</html>
