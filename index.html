@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>best-koder-ever | Portfolio</title>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: radial-gradient(1200px 600px at 20% 0%, #1f2937 0%, var(--bg) 60%); color:var(--text); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 40px 20px 64px; }
+    h1 { font-size: 2rem; margin: 0 0 8px; }
+    p { color: var(--muted); line-height: 1.6; }
+    .grid { display:grid; gap:14px; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); margin-top:22px; }
+    .card { background: rgba(17,24,39,.8); border:1px solid #1f2937; border-radius:14px; padding:16px; }
+    a { color:#86efac; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .section { margin-top: 26px; }
+    .badge { display:inline-block; margin-top: 10px; color:#052e16; background:#86efac; padding:6px 10px; border-radius:999px; font-weight:600; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>best-koder-ever | Full-Stack Platform Engineer</h1>
+    <p>I build production-style systems across backend microservices, real-time messaging, and Flutter mobile/web apps.</p>
+    <span class="badge">One-page engineering portfolio</span>
+
+    <section class="section">
+      <h2>Core Repositories</h2>
+      <div class="grid">
+        <div class="card"><strong><a href="https://github.com/best-koder-org/mobile_dejtingapp">mobile_dejtingapp</a></strong><p>Flutter app architecture, onboarding, messaging, and testable service layer.</p></div>
+        <div class="card"><strong><a href="https://github.com/best-koder-org/MatchmakingService">MatchmakingService</a></strong><p>Candidate scoring and domain-heavy matchmaking logic.</p></div>
+        <div class="card"><strong><a href="https://github.com/best-koder-org/messaging-service">messaging-service</a></strong><p>SignalR + REST real-time messaging and moderation pipeline.</p></div>
+        <div class="card"><strong><a href="https://github.com/best-koder-org/dejting-yarp">dejting-yarp</a></strong><p>API gateway and service boundary routing with YARP.</p></div>
+        <div class="card"><strong><a href="https://github.com/best-koder-org/UserService">UserService</a></strong><p>Profiles, onboarding state, and preference management.</p></div>
+        <div class="card"><strong><a href="https://github.com/best-koder-ever/DatingApp-Config">DatingApp-Config</a></strong><p>Platform orchestration, scripts, and cross-repo entrypoint docs.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Review Order (10 minutes)</h2>
+      <p>1) mobile_dejtingapp -> 2) MatchmakingService -> 3) messaging-service -> 4) dejting-yarp</p>
+    </section>
+
+    <section class="section">
+      <h2>Links</h2>
+      <p><a href="https://github.com/best-koder-org">Org profile</a> | <a href="https://github.com/best-koder-ever">Personal profile</a></p>
+      <p>YouTube demos and LinkedIn links can be added here.</p>
+    </section>
+  </main>
+</body>
+</html>
